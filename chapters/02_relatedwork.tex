@@ -1,90 +1,45 @@
 % !TeX root = ../main.tex
 % Add the above to each chapter to make compiling the PDF easier in some editors.
 
-\chapter{Introduction}\label{chapter:introduction}
+\chapter{Related Work}\label{chapter:related_work}
 
-\section{Section}
+\section{User acceptance of VR}
 Citation test~\parencite{latex}.
 
 \subsection{Subsection}
+\section{Beaming Display}
+\section{Sensing the Glasses}
+\section{Perspective-n-Point (PnP) Pose Computation}
+The glasses are not parallel projection surface in relation to the projector in the Base Station.
+This means depending on the users position and head rotation a rectangle sent by the projector is recived as a croped trapeze in most cases as the user stands rarely parallel to the projectors plane.
+Also the mirrors angels affect the optical pipeline and add additional effects to the image.
+Such transformed images will defnitly break the users immersion and crash the accaptance and has to be avoided.
+We focus on digital methods to manipulate the image beforehand on the projector side in a way that the received image is rectangular again.
+High resolution projectors became broadly available in the past years and some of the resolution can be sacrificed to counter the cropping problem and still deliver decent resolution to the user.
+The Pose of the user relative to the projector has to be known to support any image rectification methods.
+In the BeamStellar concept we try to reduce the number of external devices as much as possible.
+Many VR Headsets needed external tracking devices for positioning systems and input device tracking which required preparing of a room for VR.
+These tracking devices had to be mounted on walls and needed to be kept stationary to avoid recalibration.
+We expect low user acceptance if they need a regular tracking system and additional units in the room to use a Beaming Display.
+Thus integrating the tracking in the same device as the projector would be really beneficial.
+Previous works have used a LED on the glasses that is tracked through the same optical path as the projector sends the image.
+Some systems use a camera and others used 2D Position Sensitive Devices (PSD sensors) to track the LED point.
 
-See~\autoref{tab:sample}, \autoref{fig:sample-drawing}, \autoref{fig:sample-plot}, \autoref{fig:sample-listing}.
+The Base Station resembles a classical pinhole camera no matter which type of camera sensor is used.
+Estimating a pose of an object in an image is a solved problem in computer vision but has some constraints that have to be accounted for.
+The concept is called Perspective-n-Point Pose Computation and requires n points that have to be visivle on the object.
+Knowing the real translations of the points on the real object is key to get good estimations.
+Diffrent methods to solve the PnP problem have be proposed in the past and optimised for different use cases.
+Some require more points some can cope with fever but might provide multiple possible pose solutions, other methods require a coplanar constraint that all points have to lay on the same plane on the obejct,
+One of the biggest obstacles in applying the PnP computation is a reliable feature tracking and mapping in the observed image.
+We want to track a pair of glasses which front facing part is often a plane so we can use algorithms that require a coplanar constraint.
+Altough we could add some kalman filter to our pose output and thus choose the right pose if a method proposes multiple it's easier to add an additional feature to the glasses and reducing the possible poses by this.
 
-\begin{table}[htpb]
-  \caption[Example table]{An example for a simple table.}\label{tab:sample}
-  \centering
-  \begin{tabular}{l l l l}
-    \toprule
-      A & B & C & D \\
-    \midrule
-      1 & 2 & 1 & 2 \\
-      2 & 3 & 2 & 3 \\
-    \bottomrule
-  \end{tabular}
-\end{table}
+There are multiple implementations of PnP solvers in OpenCV implemented and offer a tested and transparent reference for our implementation.
 
-\begin{figure}[htpb]
-  \centering
-  % This should probably go into a file in figures/
-  \begin{tikzpicture}[node distance=3cm]
-    \node (R0) {$R_1$};
-    \node (R1) [right of=R0] {$R_2$};
-    \node (R2) [below of=R1] {$R_4$};
-    \node (R3) [below of=R0] {$R_3$};
-    \node (R4) [right of=R1] {$R_5$};
+From the list of available solvers we've selected the following methods.
 
-    \path[every node]
-      (R0) edge (R1)
-      (R0) edge (R3)
-      (R3) edge (R2)
-      (R2) edge (R1)
-      (R1) edge (R4);
-  \end{tikzpicture}
-  \caption[Example drawing]{An example for a simple drawing.}\label{fig:sample-drawing}
-\end{figure}
 
-\begin{figure}[htpb]
-  \centering
+\subsection{IPPE}
+\subsection{}
 
-  \pgfplotstableset{col sep=&, row sep=\\}
-  % This should probably go into a file in data/
-  \pgfplotstableread{
-    a & b    \\
-    1 & 1000 \\
-    2 & 1500 \\
-    3 & 1600 \\
-  }\exampleA
-  \pgfplotstableread{
-    a & b    \\
-    1 & 1200 \\
-    2 & 800 \\
-    3 & 1400 \\
-  }\exampleB
-  % This should probably go into a file in figures/
-  \begin{tikzpicture}
-    \begin{axis}[
-        ymin=0,
-        legend style={legend pos=south east},
-        grid,
-        thick,
-        ylabel=Y,
-        xlabel=X
-      ]
-      \addplot table[x=a, y=b]{\exampleA};
-      \addlegendentry{Example A};
-      \addplot table[x=a, y=b]{\exampleB};
-      \addlegendentry{Example B};
-    \end{axis}
-  \end{tikzpicture}
-  \caption[Example plot]{An example for a simple plot.}\label{fig:sample-plot}
-\end{figure}
-
-\begin{figure}[htpb]
-  \centering
-  \begin{tabular}{c}
-  \begin{lstlisting}[language=SQL]
-    SELECT * FROM tbl WHERE tbl.str = "str"
-  \end{lstlisting}
-  \end{tabular}
-  \caption[Example listing]{An example for a source code listing.}\label{fig:sample-listing}
-\end{figure}
